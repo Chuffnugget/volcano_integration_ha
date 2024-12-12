@@ -8,5 +8,7 @@ class VolcanoIntegrationConfigFlow(config_entries.ConfigFlow, domain="volcano_in
 
         return self.async_show_form(
             step_id="user",
-            data_schema=vol.Schema({vol.Required("address"): str}),
+            data_schema=vol.Schema({
+                vol.Required("address"): str,
+            }),
         )
