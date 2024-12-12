@@ -1,0 +1,9 @@
+{
+    "domain": "volcano_integration_ha",
+    "name": "Volcano Integration HA",
+    "version": "1.0.0",
+    "requirements": ["bleak"],
+    "codeowners": ["@Chuffnugget"],
+    "iot_class": "local_polling",
+    "config_flow": true
+}
