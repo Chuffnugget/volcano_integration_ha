@@ -1,9 +1,7 @@
 async def async_setup_entry(hass, config_entry, async_add_entities):
-    """Set up the integration."""
     address = config_entry.data.get("address")
-
     if not address:
-        _LOGGER.error("No Bluetooth address provided. Configuration is incomplete.")
+        _LOGGER.error("No Bluetooth address configured. Integration setup aborted.")
         return False
 
     try:
@@ -28,5 +26,5 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         ])
         return True
     except Exception as e:
-        _LOGGER.error(f"Error during setup of Bluetooth client: {e}")
+        _LOGGER.error(f"Failed to set up the integration for address {address}: {e}")
         return False
