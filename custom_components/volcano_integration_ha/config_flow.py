@@ -9,7 +9,6 @@ class VolcanoIntegrationConfigFlow(config_entries.ConfigFlow, domain="volcano_in
     async def async_step_user(self, user_input=None):
         if user_input is not None:
             address = user_input["address"]
-            # Validate the provided Bluetooth address
             if not await self._validate_address(address):
                 return self.async_show_form(
                     step_id="user",
@@ -31,12 +30,12 @@ class VolcanoIntegrationConfigFlow(config_entries.ConfigFlow, domain="volcano_in
         })
 
     async def _validate_address(self, address):
-        """Check if the Bluetooth address is valid by attempting a connection."""
+        """Validate the provided Bluetooth address."""
         try:
             async with BleakClient(address) as client:
-                # Test read to verify connectivity
+                # Attempt to read a characteristic to confirm the address is valid
                 await client.read_gatt_char("10110001-5354-4f52-5a26-4249434b454c")
                 return True
         except Exception as e:
-            _LOGGER.error(f"Bluetooth address validation failed: {e}")
+            _LOGGER.error(f"Validation failed for Bluetooth address {address}: {e}")
             return False
