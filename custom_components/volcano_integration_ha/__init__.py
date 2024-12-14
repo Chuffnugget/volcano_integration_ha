@@ -10,7 +10,6 @@ async def async_setup_entry(hass, config_entry):
         "address": config_entry.data["address"]
     }
 
-    # Forward the setup to each platform
     for platform in ["sensor", "switch", "number"]:
         hass.async_create_task(
             hass.config_entries.async_forward_entry_setup(config_entry, platform)
