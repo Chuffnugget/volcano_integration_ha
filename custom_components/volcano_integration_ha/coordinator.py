@@ -21,6 +21,9 @@ class GATTDeviceCoordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         """Fetch data from the Bluetooth device."""
+        if not self.address:
+            raise UpdateFailed("Bluetooth address is not set.")
+
         try:
             if not self.client or not self.connected:
                 await self._connect()
@@ -50,6 +53,9 @@ class GATTDeviceCoordinator(DataUpdateCoordinator):
         retries = 0
         while retries < MAX_RETRIES:
             try:
+                if not self.address:
+                    raise UpdateFailed("Bluetooth address is not set.")
+
                 self.client = BleakClient(self.address)
                 await self.client.connect()
                 self.connected = True
@@ -65,10 +71,13 @@ class GATTDeviceCoordinator(DataUpdateCoordinator):
 
     async def _read_characteristic(self, uuid):
         """Read a characteristic value from the device."""
+        if not self.client or not self.connected:
+            raise UpdateFailed("Bluetooth client is not connected.")
+
         try:
             value = await self.client.read_gatt_char(uuid)
             _LOGGER.info(f"Read characteristic {uuid}: {value}")
             return value.decode() if isinstance(value, bytes) else int.from_bytes(value, byteorder="little")
         except Exception as e:
             _LOGGER.error(f"Failed to read characteristic {uuid}: {e}")
-            raise
+            raise UpdateFailed(f"Failed to read characteristic {uuid}: {e}")
