@@ -1,4 +1,5 @@
 import logging
+from datetime import timedelta
 from bleak import BleakClient, BleakError
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
@@ -9,7 +10,7 @@ class GATTDeviceCoordinator(DataUpdateCoordinator):
 
     def __init__(self, hass, address, update_interval):
         """Initialize the coordinator."""
-        super().__init__(hass, _LOGGER, name="Volcano Coordinator", update_interval=update_interval)
+        super().__init__(hass, _LOGGER, name="Volcano Coordinator", update_interval=timedelta(seconds=update_interval))
         self.address = address
         self.connected = False
 
