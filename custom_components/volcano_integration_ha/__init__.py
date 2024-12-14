@@ -1,4 +1,5 @@
 import logging
+import asyncio
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -20,12 +21,14 @@ async def async_setup_entry(hass, config_entry):
 
 async def async_unload_entry(hass, config_entry):
     """Unload the Volcano Hybrid integration."""
-    unload_ok = all(
-        await hass.config_entries.async_forward_entry_unload(config_entry, platform)
-        for platform in ["sensor", "switch", "number"]
+    unload_results = await asyncio.gather(
+        *[
+            hass.config_entries.async_forward_entry_unload(config_entry, platform)
+            for platform in ["sensor", "switch", "number"]
+        ]
     )
 
-    if unload_ok:
+    if all(unload_results):
         hass.data["volcano_integration_ha"].pop(config_entry.entry_id)
 
-    return unload_ok
+    return all(unload_results)
