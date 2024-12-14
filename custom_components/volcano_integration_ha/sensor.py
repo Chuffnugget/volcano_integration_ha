@@ -1,8 +1,5 @@
-import logging
 from homeassistant.components.sensor import SensorEntity
 from .coordinator import GATTDeviceCoordinator
-
-_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up Volcano Hybrid sensor entities."""
@@ -12,22 +9,24 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     await coordinator.async_config_entry_first_refresh()
 
     async_add_entities([
-        GATTConnectionStatus(coordinator),
-        GATTSerialNumber(coordinator),
         GATTTemperatureSensor(coordinator),
+        GATTSerialNumber(coordinator),
+        GATTBLEFirmwareVersion(coordinator),
+        GATTHoursOfOperation(coordinator),
+        GATTMinutesOfOperation(coordinator),
     ])
 
 
-class GATTConnectionStatus(SensorEntity):
-    """Entity to track Bluetooth connection status."""
+class GATTTemperatureSensor(SensorEntity):
+    """Entity to monitor the current temperature."""
 
     def __init__(self, coordinator):
         self.coordinator = coordinator
-        self._attr_name = "Volcano Connection Status"
+        self._attr_name = "Volcano Temperature"
 
     @property
     def native_value(self):
-        return "Connected" if self.coordinator.connected else "Disconnected"
+        return self.coordinator.data.get("Temperature Read")
 
 
 class GATTSerialNumber(SensorEntity):
@@ -39,16 +38,40 @@ class GATTSerialNumber(SensorEntity):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("serial_number")
+        return self.coordinator.data.get("Serial Number")
 
 
-class GATTTemperatureSensor(SensorEntity):
-    """Entity to monitor the current temperature."""
+class GATTBLEFirmwareVersion(SensorEntity):
+    """Entity to show the BLE firmware version."""
 
     def __init__(self, coordinator):
         self.coordinator = coordinator
-        self._attr_name = "Volcano Current Temperature"
+        self._attr_name = "BLE Firmware Version"
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("temperature")
+        return self.coordinator.data.get("BLE Firmware Version")
+
+
+class GATTHoursOfOperation(SensorEntity):
+    """Entity to monitor the hours of operation."""
+
+    def __init__(self, coordinator):
+        self.coordinator = coordinator
+        self._attr_name = "Hours of Operation"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("Hours of Operation")
+
+
+class GATTMinutesOfOperation(SensorEntity):
+    """Entity to monitor the minutes of operation."""
+
+    def __init__(self, coordinator):
+        self.coordinator = coordinator
+        self._attr_name = "Minutes of Operation"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("Minutes of Operation")
