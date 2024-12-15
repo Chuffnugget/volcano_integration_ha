@@ -1,7 +1,7 @@
 {
     "domain": "volcano_integration_ha",
     "name": "Volcano Integration HA",
-    "version": "v1.1.4",
+    "version": "1.1.5",
     "documentation": "https://github.com/Chuffnugget/volcano_integration_ha",
     "issue_tracker": "https://github.com/Chuffnugget/volcano_integration_ha/issues",
     "requirements": ["bleak"],
