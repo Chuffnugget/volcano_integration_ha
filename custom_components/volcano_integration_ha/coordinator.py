@@ -1,6 +1,5 @@
 import logging
 from datetime import timedelta
-from bleak import BleakClient, BleakError
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .device import VolcanoDevice
@@ -13,7 +12,6 @@ class VolcanoCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, address):
         """Initialize the coordinator."""
         super().__init__(hass, _LOGGER, name="VolcanoCoordinator", update_interval=timedelta(seconds=0.5))
-        self.address = address
         self.device = VolcanoDevice(address)
 
     async def _async_update_data(self):
