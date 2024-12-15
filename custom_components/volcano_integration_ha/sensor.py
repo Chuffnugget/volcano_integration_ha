@@ -16,6 +16,7 @@ class VolcanoTemperatureSensor(SensorEntity):
     def __init__(self, coordinator):
         self.coordinator = coordinator
         self._attr_name = "Volcano Temperature"
+        self._attr_unit_of_measurement = "°C"
 
     @property
     def native_value(self):
