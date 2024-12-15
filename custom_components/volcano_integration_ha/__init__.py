@@ -17,7 +17,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][config_entry.entry_id] = coordinator
 
-    for platform in ["sensor", "switch", "number"]:
+    for platform in ["sensor", "switch", "number", "connection"]:
         hass.async_create_task(
             hass.config_entries.async_forward_entry_setup(config_entry, platform)
         )
@@ -32,7 +32,7 @@ async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry):
 
     unload_ok = all(
         await hass.config_entries.async_forward_entry_unload(config_entry, platform)
-        for platform in ["sensor", "switch", "number"]
+        for platform in ["sensor", "switch", "number", "connection"]
     )
 
     return unload_ok
